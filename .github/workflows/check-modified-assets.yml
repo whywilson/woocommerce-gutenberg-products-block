@@ -14,8 +14,8 @@ jobs:
                   npm run build
             - name: build asset list
               run: |
-                  chmod +x ./../../bin/combine-assets.sh
-                  ./../../bin/combine-assets.sh > assets.txt
+                  chmod +x ./bin/combine-assets.sh
+                  ./bin/combine-assets.sh > assets.txt
               shell: bash
             - name: Archive build artifacts
               uses: actions/upload-artifact@v2
@@ -35,8 +35,8 @@ jobs:
                   npm run build
             - name: build asset list
               run: |
-                  chmod +x ./../../bin/combine-assets.sh
-                  ./../../bin/combine-assets.sh > trunk-assets.txt
+                  chmod +x ./bin/combine-assets.sh
+                  ./bin/combine-assets.sh > trunk-assets.txt
               shell: bash
             - name: Upload Artifact
               uses: actions/upload-artifact@v2
