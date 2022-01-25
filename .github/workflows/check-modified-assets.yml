@@ -1,0 +1,53 @@
+name: Check Modified Assets
+
+on: [pull_request]
+
+jobs:
+    build-and-upload-artifacts:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v2
+            - name: npm install and build
+              run: |
+                  npm install
+                  npm run build
+            - name: Archive build artifacts
+              uses: actions/upload-artifact@v2
+              with:
+                  name: built-assets
+                  path: |
+                      build/**/*.asset.php
+    build-and-upload-trunk-artifacts:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v2
+            - name: npm install and build
+              run: |
+                  npm install
+                  npm run build
+            - name: Archive build artifacts
+              uses: actions/upload-artifact@v2
+              with:
+                  name: built-trunk-assets
+                  path: |
+                      build/**/*.asset.php
+    compare-assets:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Download assets
+              uses: actions/download-artifact@v2
+              with:
+                  name: built-assets
+                  path: pr-assets
+            - name: Download assets (trunk)
+              uses: actions/download-artifact@v2
+              with:
+                  name: built-trunk-assets
+                  path: trunk-assets
+            - name: Run the diff
+              shell: bash
+              run: |
+                  value=`diff -r trunk-assets pr-assets`
+                  echo The diff is $value
