@@ -12,11 +12,7 @@ jobs:
               run: |
                   npm ci
                   npm run build
-            - name: build asset list
-              run: |
-                  chmod +x ./bin/combine-assets.sh
-                  ./bin/combine-assets.sh > assets.txt
-              shell: bash
+                  npm run list-assets -s > assets.txt
             - name: Archive build artifacts
               uses: actions/upload-artifact@v2
               with:
@@ -33,10 +29,7 @@ jobs:
               run: |
                   npm ci
                   npm run build
-            - name: build asset list
-              run: |
-                  chmod +x ./bin/combine-assets.sh
-                  ./bin/combine-assets.sh > trunk-assets.txt
+                  npm run list-assets -s > trunk-assets.txt
               shell: bash
             - name: Upload Artifact
               uses: actions/upload-artifact@v2
