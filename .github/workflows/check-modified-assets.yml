@@ -3,7 +3,7 @@ name: Check Modified Assets
 on: [pull_request]
 
 jobs:
-    build-and-upload-artifacts:
+    build-pr:
         runs-on: ubuntu-latest
         steps:
             - name: Checkout repository
@@ -12,12 +12,14 @@ jobs:
               run: |
                   npm ci
                   npm run build
+            - name: build asset list
+              run: sh ../../bin/combine-assets.sh > assets.txt
             - name: Archive build artifacts
               uses: actions/upload-artifact@v2
               with:
-                  name: built-assets
-                  path: build/*.asset.php
-    build-and-upload-trunk-artifacts:
+                  name: assets-txt
+                  path: assets.txt
+    build-trunk:
         runs-on: ubuntu-latest
         steps:
             - name: Checkout repository
@@ -28,26 +30,30 @@ jobs:
               run: |
                   npm ci
                   npm run build
-            - name: Archive build artifacts
+            - name: build asset list
+              run: sh ../../bin/combine-assets.sh > trunk-assets.txt
+            - name: Upload Artifact
               uses: actions/upload-artifact@v2
               with:
-                  name: built-trunk-assets
-                  path: build/*.asset.php
+                  name: trunk-assets-txt
+                  path: trunk-assets.txt
     compare-assets:
-        needs: [build-and-upload-artifacts, build-and-upload-trunk-artifacts]
+        needs: [build-pr, build-trunk]
         runs-on: ubuntu-latest
         steps:
             - name: Download assets
               uses: actions/download-artifact@v2
               with:
-                  name: built-assets
-                  path: pr-assets
+                  name: trunk-assets-txt
             - name: Download assets (trunk)
               uses: actions/download-artifact@v2
               with:
-                  name: built-trunk-assets
-                  path: trunk-assets
-            - name: Run the diff
-              shell: bash
-              run: |
-                  diff trunk-assets pr-assets
+                  name: assets-txt
+            - uses: LouisBrunner/diff-action@v0.1.0
+              with:
+                  old: trunk-assets.txt
+                  new: assets.txt
+                  mode: deletion
+                  tolerance: mixed
+                  token: ${{ secrets.GITHUB_TOKEN }}
+                  notify_issue: true
