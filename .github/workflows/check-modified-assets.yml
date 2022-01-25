@@ -16,8 +16,7 @@ jobs:
               uses: actions/upload-artifact@v2
               with:
                   name: built-assets
-                  path: |
-                      build/**/*.asset.php
+                  path: build/*.asset.php
     build-and-upload-trunk-artifacts:
         runs-on: ubuntu-latest
         steps:
@@ -31,8 +30,7 @@ jobs:
               uses: actions/upload-artifact@v2
               with:
                   name: built-trunk-assets
-                  path: |
-                      build/**/*.asset.php
+                  path: build/*.asset.php
     compare-assets:
         needs: [build-and-upload-artifacts, build-and-upload-trunk-artifacts]
         runs-on: ubuntu-latest
