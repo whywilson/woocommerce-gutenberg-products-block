@@ -10,7 +10,8 @@ jobs:
               uses: actions/checkout@v2
             - name: npm install and build
               run: |
-                  npm ci
+                  npm install
+                  npm list webpack
                   npm run build
             - name: Archive build artifacts
               uses: actions/upload-artifact@v2
@@ -24,7 +25,8 @@ jobs:
               uses: actions/checkout@v2
             - name: npm install and build
               run: |
-                  npm ci
+                  npm install
+                  npm list webpack
                   npm run build
             - name: Archive build artifacts
               uses: actions/upload-artifact@v2
