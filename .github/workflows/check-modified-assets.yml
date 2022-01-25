@@ -9,9 +9,9 @@ jobs:
             - name: Checkout repository
               uses: actions/checkout@v2
             - name: Use Node.js 16.x
-              uses: actions/setup-node@v1
+              uses: actions/setup-node@v2
               with:
-                  node-version: 16.x
+                  node-version: '16'
             - name: npm install and build
               run: |
                   npm install
@@ -30,15 +30,14 @@ jobs:
               with:
                   ref: trunk
             - name: Use Node.js 16.x
-              uses: actions/setup-node@v1
+              uses: actions/setup-node@v2
               with:
-                  node-version: 16.x
+                  node-version: '16'
             - name: npm install and build
               run: |
                   npm install
                   npm run build
                   npm run list-assets -s > trunk-assets.txt
-              shell: bash
             - name: Upload Artifact
               uses: actions/upload-artifact@v2
               with:
