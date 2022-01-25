@@ -48,5 +48,4 @@ jobs:
             - name: Run the diff
               shell: bash
               run: |
-                  value=`diff -r trunk-assets pr-assets`
-                  echo The diff is $value
+                  diff trunk-assets pr-assets
