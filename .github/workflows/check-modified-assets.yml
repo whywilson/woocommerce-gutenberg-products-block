@@ -10,7 +10,7 @@ jobs:
               uses: actions/checkout@v2
             - name: npm install and build
               run: |
-                  npm install
+                  npm ci
                   npm run build
             - name: Archive build artifacts
               uses: actions/upload-artifact@v2
@@ -25,7 +25,7 @@ jobs:
               uses: actions/checkout@v2
             - name: npm install and build
               run: |
-                  npm install
+                  npm ci
                   npm run build
             - name: Archive build artifacts
               uses: actions/upload-artifact@v2
@@ -34,6 +34,7 @@ jobs:
                   path: |
                       build/**/*.asset.php
     compare-assets:
+        needs: [build-and-upload-artifacts, build-and-upload-trunk-artifacts]
         runs-on: ubuntu-latest
         steps:
             - name: Download assets
