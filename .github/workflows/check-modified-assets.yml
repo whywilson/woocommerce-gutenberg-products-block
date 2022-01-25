@@ -17,7 +17,7 @@ jobs:
                   npm install
                   npm run build
                   npm run list-assets -s > assets.txt
-            - name: Archive build artifacts
+            - name: Upload Artifact
               uses: actions/upload-artifact@v2
               with:
                   name: assets-txt
