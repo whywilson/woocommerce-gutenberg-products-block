@@ -57,6 +57,8 @@ const runner = async () => {
 			newArtifactName
 		);
 
+		console.log( newAssets );
+
 		if ( ! newAssets ) {
 			return;
 		}
@@ -66,12 +68,28 @@ const runner = async () => {
 			oldArtifactName
 		);
 
+		console.log( oldAssets );
+
 		if ( ! oldAssets ) {
 			return;
 		}
 
-		console.log( newAssets );
-		console.log( oldAssets );
+		const changes = Object.fromEntries(
+			Object.entries( newAssets )
+				.map( ( [ key, { dependencies = [] } ] ) => {
+					const oldDependencies = oldAssets[ key ].dependencies || [];
+					const currentChanges = dependencies.filter(
+						( dependency ) =>
+							! oldDependencies.includes( dependency )
+					);
+					return currentChanges.length
+						? [ key, currentChanges ]
+						: null;
+				} )
+				.filter( Boolean )
+		);
+
+		console.log( changes );
 	} catch ( error ) {
 		core.setFailed( error.message );
 	}
