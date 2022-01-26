@@ -7,24 +7,17 @@ const core = require( '@actions/core' );
 const runner = async () => {
 	try {
 		const token = core.getInput( 'repo-token', { required: true } );
-		const prNumber = github.context.payload.pull_request.number;
-		const owner = github.context.payload.sender.login;
-		const repo = github.context.payload.repository.name;
 		const octokit = github.getOctokit( token );
 		const oldAssets = require( '../../' +
 			core.getInput( 'compare', {
 				required: true,
 			} ) );
 
-		console.log( oldAssets );
-
 		if ( ! oldAssets ) {
 			return;
 		}
 
 		const newAssets = require( '../../build/assets.json' );
-
-		console.log( newAssets );
 
 		if ( ! newAssets ) {
 			return;
@@ -43,7 +36,7 @@ const runner = async () => {
 							! dependencies.includes( dependency )
 					);*/
 					const currentChanges = {
-						added: [],
+						added: dependencies,
 						removed: [],
 					};
 					return currentChanges.length
@@ -53,7 +46,9 @@ const runner = async () => {
 				.filter( Boolean )
 		);
 
-		console.log( changes );
+		if ( changes.length === 0 ) {
+			return;
+		}
 
 		const reportContent = Object.entries( changes ).map(
 			( [ handle, { added, removed } ] ) => {
@@ -94,10 +89,9 @@ const runner = async () => {
 		__This comment was automatically added by the \`./github/compare-assets\` action.__
 		`;
 
-		octokit.issues.createComment( {
-			owner,
-			repo,
-			issue_number: prNumber,
+		await octokit.issues.createComment( {
+			...github.context.repo,
+			issue_number: github.context.payload.pull_request.number,
 			body: message,
 		} );
 	} catch ( error ) {
