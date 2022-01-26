@@ -51,11 +51,12 @@ const runner = async () => {
 				.filter( Boolean )
 		);
 
-		if ( changes.length === 0 ) {
+		if ( Object.keys( changes ).length === 0 ) {
 			return;
 		}
 
 		let reportContent = '';
+
 		Object.entries( changes ).forEach(
 			( [ handle, { added, removed } ] ) => {
 				const addedDeps = added.length
