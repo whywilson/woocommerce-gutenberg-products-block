@@ -42,7 +42,7 @@ jobs:
         steps:
             - uses: actions/checkout@v2
               with:
-                  ref: add/experiment-asset-comparison-2
+                  ref: add/experiment-asset-comparison-3
 
             - name: Cache node modules
               uses: actions/cache@v2
