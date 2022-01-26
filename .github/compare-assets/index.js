@@ -53,8 +53,8 @@ const runner = async () => {
 			return;
 		}
 
-		const reportContent = Object.entries( changes ).map(
-			( [ handle, { added, removed } ] ) => {
+		const reportContent = Object.entries( changes )
+			.map( ( [ handle, { added, removed } ] ) => {
 				const addedDeps = added.length
 					? '`' + added.implode( '`, `' ) + '`'
 					: '';
@@ -73,30 +73,21 @@ const runner = async () => {
 				}
 
 				return `| \`${ handle }\` | ${ addedDeps } | ${ removedDeps } | ${ icon } |`;
-			}
-		);
-
-		let message = `
-		# Script Dependencies Report
-
-		The \`compare-assets\` action has detected some changed script dependencies between this branch and trunk.
-		Please review and confirm the following are correct before merging. Failure to do so may result in reduced
-		performance since more scripts will be enqueued by WordPress.
-
-		---
-
-		| Script Handle | Added | Removed | |
-		| ------------- | ------| ------- | |
-		${ reportContent }
-
-		__This comment was automatically added by the \`./github/compare-assets\` action.__
-		`;
+			} )
+			.implode( '\n' );
 
 		await octokit.rest.issues.createComment( {
 			owner,
 			repo,
 			issue_number: payload.pull_request.number,
-			body: message,
+			body:
+				'# Script Dependencies Report' +
+				'The `compare-assets` action has detected some changed script dependencies between this branch and ' +
+				'trunk. Please review and confirm the following are correct before merging.' +
+				'| Script Handle | Added | Removed | |' +
+				'| ------------- | ------| ------- | |' +
+				reportContent +
+				'__This comment was automatically added by the `./github/compare-assets` action.__',
 		} );
 	} catch ( error ) {
 		setFailed( error.message );
