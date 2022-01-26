@@ -11,7 +11,7 @@ jobs:
             - name: Cache node modules
               uses: actions/cache@v2
               env:
-                  cache-name: cache-node-modules
+                cache-name: cache-node-modules
               with:
                   # npm cache files are stored in `~/.npm` on Linux/macOS
                   path: ~/.npm
@@ -29,6 +29,9 @@ jobs:
               run: |
                   npm ci
                   npm run build
+
+            - name: Create assets list
+                run: |
                   npm run list-assets -s > assets.txt
 
             - name: Upload Artifact
@@ -36,12 +39,13 @@ jobs:
               with:
                   name: assets-txt
                   path: assets.txt
+
     build-trunk:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v2
               with:
-                  ref: trunk
+                ref: trunk
 
             - name: Cache node modules
               uses: actions/cache@v2
@@ -64,7 +68,11 @@ jobs:
               run: |
                   npm ci
                   npm run build
+
+            - name: Create assets list
+                run: |
                   npm run list-assets -s > trunk-assets.txt
+
             - name: Upload Artifact
               uses: actions/upload-artifact@v2
               with:
