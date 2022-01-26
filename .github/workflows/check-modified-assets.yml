@@ -80,16 +80,16 @@ jobs:
               uses: actions/download-artifact@v2
               with:
                   name: assets-list
-                  path: assets-list.php
+                  path: new-asset
             - name: Download assets (trunk)
               uses: actions/download-artifact@v2
               with:
                   name: assets-list-trunk
-                  path: assets-list-trunk.php
+                  path: old-asset
             - uses: LouisBrunner/diff-action@v0.1.0
               with:
-                  old: assets-list-trunk.php
-                  new: assets-list.php
+                  old: old-asset/assets.php
+                  new: new-asset/assets.php
                   mode: deletion
                   tolerance: mixed
                   token: ${{ secrets.GITHUB_TOKEN }}
