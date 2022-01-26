@@ -66,4 +66,4 @@ jobs:
               uses: ./.github/compare-assets
               with:
                   repo-token: '${{ secrets.GITHUB_TOKEN }}'
-                  compare: ./assets-list/assets.json
+                  compare: assets-list/assets.json

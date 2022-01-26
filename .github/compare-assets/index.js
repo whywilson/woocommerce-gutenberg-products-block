@@ -11,9 +11,10 @@ const runner = async () => {
 		const owner = github.context.payload.sender.login;
 		const repo = github.context.payload.repository.name;
 		const octokit = github.getOctokit( token );
-		const oldAssets = require( core.getInput( 'compare', {
-			required: true,
-		} ) );
+		const oldAssets = require( '../../' +
+			core.getInput( 'compare', {
+				required: true,
+			} ) );
 
 		console.log( oldAssets );
 
