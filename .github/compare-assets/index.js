@@ -51,8 +51,8 @@ const runner = async () => {
 			required: true,
 		} );
 		const prNumber = github.context.payload.pull_request.number;
-		const owner = context.payload.sender.login;
-		const repo = context.payload.repository.name;
+		const owner = github.context.payload.sender.login;
+		const repo = github.context.payload.repository.name;
 		const octokit = github.getOctokit( token );
 
 		const newAssets = await downloadAssetsFromArtifact(
