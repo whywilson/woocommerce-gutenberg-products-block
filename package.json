@@ -28,6 +28,7 @@
 	"license": "GPL-3.0+",
 	"scripts": {
 		"build": "rimraf build/* && cross-env BABEL_ENV=default NODE_ENV=production webpack",
+		"build:check-assets": "rimraf build/* && cross-env ASSET_CHECK=true BABEL_ENV=default NODE_ENV=production webpack && perl -i -pe \"s/, 'version' => '([a-z]|\\d)*'//g\" build/assets.php",
 		"build:deploy": "rimraf vendor/* && cross-env WOOCOMMERCE_BLOCKS_PHASE=2 composer install --no-dev && cross-env WOOCOMMERCE_BLOCKS_PHASE=2 npm run build --loglevel error",
 		"build:e2e-test": "npm run build",
 		"build:map": "cross-env BABEL_ENV=default NODE_ENV=production FORCE_MAP=true webpack",
@@ -50,7 +51,6 @@
 		"lint:js-fix": "eslint assets/js --ext=js,jsx,ts,tsx --fix",
 		"lint:php": "composer run-script phpcs ./src",
 		"lint:php-fix": "composer run-script phpcbf ./src",
-		"list-assets": "./bin/list-assets.sh",
 		"package-plugin": "rimraf woocommerce-gutenberg-products-block.zip && ./bin/build-plugin-zip.sh",
 		"package-plugin:dev": "rimraf woocommerce-gutenberg-products-block.zip && ./bin/build-plugin-zip.sh -d",
 		"package-plugin:zip-only": "rimraf woocommerce-gutenberg-products-block.zip && ./bin/build-plugin-zip.sh -z",

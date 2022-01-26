@@ -17,6 +17,7 @@ const CircularDependencyPlugin = require( 'circular-dependency-plugin' );
  */
 const { getEntryConfig } = require( './webpack-entries' );
 const {
+	ASSET_CHECK,
 	NODE_ENV,
 	FORCE_MAP,
 	CHECK_CIRCULAR_DEPS,
@@ -41,6 +42,8 @@ const sharedPlugins = [
 		: false,
 	new DependencyExtractionWebpackPlugin( {
 		injectPolyfill: true,
+		combineAssets: ASSET_CHECK,
+		outputFormat: 'php',
 		requestToExternal,
 		requestToHandle,
 	} ),

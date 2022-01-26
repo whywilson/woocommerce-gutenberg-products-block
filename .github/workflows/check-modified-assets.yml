@@ -29,17 +29,13 @@ jobs:
             - name: npm install and build
               run: |
                   npm ci
-                  npm run build
-
-            - name: Create assets list
-              run: |
-                  npm run list-assets -s > assets.txt
+                  npm run build:check-assets
 
             - name: Upload Artifact
               uses: actions/upload-artifact@v2
               with:
-                  name: assets-txt
-                  path: assets.txt
+                  name: assets-list
+                  path: ./build/assets.php
 
     build-trunk:
         runs-on: ubuntu-latest
@@ -68,17 +64,13 @@ jobs:
             - name: npm install and build
               run: |
                   npm ci
-                  npm run build
-
-            - name: Create assets list
-              run: |
-                  npm run list-assets -s > trunk-assets.txt
+                  npm run build:check-assets
 
             - name: Upload Artifact
               uses: actions/upload-artifact@v2
               with:
-                  name: trunk-assets-txt
-                  path: trunk-assets.txt
+                  name: assets-list-trunk
+                  path: ./build/assets.php
 
     compare-assets:
         needs: [build-pr, build-trunk]
@@ -87,15 +79,17 @@ jobs:
             - name: Download assets
               uses: actions/download-artifact@v2
               with:
-                  name: trunk-assets-txt
+                  name: assets-list
+                  path: assets-list.php
             - name: Download assets (trunk)
               uses: actions/download-artifact@v2
               with:
-                  name: assets-txt
+                  name: assets-list-trunk
+                  path: assets-list-trunk.php
             - uses: LouisBrunner/diff-action@v0.1.0
               with:
-                  old: trunk-assets.txt
-                  new: assets.txt
+                  old: assets-list-trunk.php
+                  new: assets-list.php
                   mode: deletion
                   tolerance: mixed
                   token: ${{ secrets.GITHUB_TOKEN }}
