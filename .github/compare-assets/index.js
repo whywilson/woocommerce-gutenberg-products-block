@@ -38,7 +38,7 @@ const runner = async () => {
 						( dependency ) =>
 							! dependencies.includes( dependency )
 					);*/
-					const added = Object.values( dependencies );
+					const added = dependencies;
 					const removed = [];
 					return added.length || removed.length
 						? [
@@ -61,10 +61,10 @@ const runner = async () => {
 		Object.entries( changes ).forEach(
 			( [ handle, { added, removed } ] ) => {
 				const addedDeps = added.length
-					? '`' + added.implode( '`, `' ) + '`'
+					? '`' + added.join( '`, `' ) + '`'
 					: '';
 				const removedDeps = removed.length
-					? '`' + removed.implode( '`, `' ) + '`'
+					? '`' + removed.join( '`, `' ) + '`'
 					: '';
 
 				let icon = '';
