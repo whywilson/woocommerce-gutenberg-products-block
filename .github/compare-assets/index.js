@@ -53,8 +53,9 @@ const runner = async () => {
 			return;
 		}
 
-		const reportContent = Object.entries( changes )
-			.map( ( [ handle, { added, removed } ] ) => {
+		let reportContent = '';
+		Object.entries( changes ).forEach(
+			( [ handle, { added, removed } ] ) => {
 				const addedDeps = added.length
 					? '`' + added.implode( '`, `' ) + '`'
 					: '';
@@ -72,9 +73,13 @@ const runner = async () => {
 					icon = '🎉';
 				}
 
-				return `| \`${ handle }\` | ${ addedDeps } | ${ removedDeps } | ${ icon } |`;
-			} )
-			.implode( '\n' );
+				reportContent +=
+					`| \`${ handle }\` | ${ addedDeps } | ${ removedDeps } | ${ icon } |` +
+					'\n';
+			}
+		);
+
+		console.log( reportContent );
 
 		await octokit.rest.issues.createComment( {
 			owner,
