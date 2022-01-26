@@ -38,12 +38,16 @@ const runner = async () => {
 						( dependency ) =>
 							! dependencies.includes( dependency )
 					);*/
-					const currentChanges = {
-						added: dependencies,
-						removed: [],
-					};
-					return currentChanges.length
-						? [ key, currentChanges ]
+					const added = dependencies;
+					const removed = [];
+					return added.length || removed.length
+						? [
+								key,
+								{
+									added,
+									removed,
+								},
+						  ]
 						: null;
 				} )
 				.filter( Boolean )
@@ -87,11 +91,14 @@ const runner = async () => {
 			issue_number: payload.pull_request.number,
 			body:
 				'# Script Dependencies Report' +
+				'\n\n' +
 				'The `compare-assets` action has detected some changed script dependencies between this branch and ' +
 				'trunk. Please review and confirm the following are correct before merging.' +
+				'\n\n' +
 				'| Script Handle | Added | Removed | |' +
 				'| ------------- | ------| ------- | |' +
 				reportContent +
+				'\n\n' +
 				'__This comment was automatically added by the `./github/compare-assets` action.__',
 		} );
 	} catch ( error ) {
