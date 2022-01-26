@@ -11,28 +11,21 @@ const runner = async () => {
 		const owner = github.context.payload.sender.login;
 		const repo = github.context.payload.repository.name;
 		const octokit = github.getOctokit( token );
-
-		const newAssets = require( './' +
-			core.getInput( 'new-assets-dir', {
-				required: true,
-			} ) +
-			'/assets.json' );
-
-		console.log( newAssets );
-
-		if ( ! newAssets ) {
-			return;
-		}
-
-		const oldAssets = require( './' +
-			core.getInput( 'old-assets-dir', {
-				required: true,
-			} ) +
-			'/assets.json' );
+		const oldAssets = require( core.getInput( 'compare', {
+			required: true,
+		} ) );
 
 		console.log( oldAssets );
 
 		if ( ! oldAssets ) {
+			return;
+		}
+
+		const newAssets = require( '../../build/assets.json' );
+
+		console.log( newAssets );
+
+		if ( ! newAssets ) {
 			return;
 		}
 

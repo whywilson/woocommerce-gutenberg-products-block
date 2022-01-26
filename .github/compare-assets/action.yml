@@ -4,11 +4,8 @@ inputs:
     repo-token:
         description: 'GitHub token'
         required: true
-    new-assets-dir:
-        description: 'Directory where assets.json resides to compare'
-        required: true
-    old-assets-dir:
-        description: 'Directory where old assets.json resides to compare'
+    compare:
+        description: 'Path to assets file to compare the build assets with.'
         required: true
 runs:
     using: 'node16'
