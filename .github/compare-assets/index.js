@@ -29,7 +29,8 @@ const runner = async () => {
 		const changes = Object.fromEntries(
 			Object.entries( newAssets )
 				.map( ( [ key, { dependencies = [] } ] ) => {
-					const oldDependencies = oldAssets[ key ].dependencies || [];
+					const oldDependencies =
+						oldAssets[ key ]?.dependencies || [];
 					const added = dependencies.filter(
 						( dependency ) =>
 							! oldDependencies.includes( dependency )
