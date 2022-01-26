@@ -30,16 +30,13 @@ const runner = async () => {
 			Object.entries( newAssets )
 				.map( ( [ key, { dependencies = [] } ] ) => {
 					const oldDependencies = oldAssets[ key ].dependencies || [];
-					/*const added = dependencies.filter(
+					const added = dependencies.filter(
 						( dependency ) =>
 							! oldDependencies.includes( dependency )
 					);
 					const removed = oldDependencies.filter(
-						( dependency ) =>
-							! dependencies.includes( dependency )
-					);*/
-					const added = dependencies;
-					const removed = [];
+						( dependency ) => ! dependencies.includes( dependency )
+					);
 					return added.length || removed.length
 						? [
 								key,
@@ -93,9 +90,9 @@ const runner = async () => {
 				'The `compare-assets` action has detected some changed script dependencies between this branch and ' +
 				'trunk. Please review and confirm the following are correct before merging.' +
 				'\n\n' +
-				'| *Script Handle* | *Added* | *Removed* |    |' +
+				'| Script Handle | Added | Removed |    |' +
 				'\n' +
-				'| --------------- | --------| --------- | -- |' +
+				'| ------------- | ------| ------- | -- |' +
 				'\n' +
 				reportContent +
 				'\n\n' +
