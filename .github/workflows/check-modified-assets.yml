@@ -99,5 +99,5 @@ jobs:
               uses: ./.github/compare-assets
               with:
                   repo-token: '${{ secrets.GITHUB_TOKEN }}'
-                  old-assets-dir: ./assets-list-trunk
-                  new-assets-dir: ./assets-list
+                  old-assets-dir: assets-list-trunk
+                  new-assets-dir: assets-list
