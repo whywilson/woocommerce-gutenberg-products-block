@@ -90,8 +90,8 @@ const runner = async () => {
 							! dependencies.includes( dependency )
 					);*/
 					const currentChanges = {
-						added = [],
-						removed = [],
+						added: [],
+						removed: [],
 					};
 					return currentChanges.length
 						? [ key, currentChanges ]
@@ -102,22 +102,28 @@ const runner = async () => {
 
 		console.log( changes );
 
-		const reportContent = Object.entries(changes).map( ( [ handle, { added, removed } ] ) => {
-			const addedDeps = added.length ? '`' + added.implode( '`, `' ) + '`' : '';
-			const removedDeps = removed.length ? '`' + removed.implode( '`, `' ) + '`' : '';
+		const reportContent = Object.entries( changes ).map(
+			( [ handle, { added, removed } ] ) => {
+				const addedDeps = added.length
+					? '`' + added.implode( '`, `' ) + '`'
+					: '';
+				const removedDeps = removed.length
+					? '`' + removed.implode( '`, `' ) + '`'
+					: '';
 
-			let icon = '';
+				let icon = '';
 
-			if ( added.length && removed.length ) {
-				icon = '❓';
-			} else if (added.length ) {
-				icon = '⚠️';
-			} else if (removed.length ) {
-				icon = '🎉';
+				if ( added.length && removed.length ) {
+					icon = '❓';
+				} else if ( added.length ) {
+					icon = '⚠️';
+				} else if ( removed.length ) {
+					icon = '🎉';
+				}
+
+				return `| \`${ handle }\` | ${ addedDeps } | ${ removedDeps } | ${ icon } |`;
 			}
-
-			return `| \`${ handle }\` | ${ addedDeps } | ${ removedDeps } | ${ icon } |`;
-		} );
+		);
 
 		let message = `
 		# Script Dependencies Report
