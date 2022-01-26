@@ -76,6 +76,7 @@ jobs:
         needs: [build-pr, build-trunk]
         runs-on: ubuntu-latest
         steps:
+            - uses: actions/checkout@v2
             - name: Compare Assets
               uses: ./.github/compare-assets
               with:
