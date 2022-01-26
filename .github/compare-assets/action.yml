@@ -4,11 +4,11 @@ inputs:
     repo-token:
         description: 'GitHub token'
         required: true
-    new-artifact-name:
-        description: 'The name of the uploaded artifact for the current branch'
+    new-assets-dir:
+        description: 'Directory where assets.json resides to compare'
         required: true
-    old-artifact-name:
-        description: 'The name of the uploaded artifact for the old branch'
+    old-assets-dir:
+        description: 'Directory where old assets.json resides to compare'
         required: true
 runs:
     using: 'node16'

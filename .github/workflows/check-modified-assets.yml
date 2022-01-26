@@ -85,9 +85,19 @@ jobs:
             - name: npm install
               run: |
                   npm ci
+            - name: Download assets
+              uses: actions/download-artifact@v2
+              with:
+                  name: assets-list
+                  path: ./assets-list
+            - name: Download assets (trunk)
+              uses: actions/download-artifact@v2
+              with:
+                  name: assets-list-trunk
+                  path: ./assets-list-trunk
             - name: Compare Assets
               uses: ./.github/compare-assets
               with:
                   repo-token: '${{ secrets.GITHUB_TOKEN }}'
-                  old-artifact-name: assets-list-trunk
-                  new-artifact-name: assets-list
+                  old-assets-dir: ./assets-list-trunk
+                  new-assets-dir: ./assets-list
