@@ -43,7 +43,7 @@ const sharedPlugins = [
 	new DependencyExtractionWebpackPlugin( {
 		injectPolyfill: true,
 		combineAssets: ASSET_CHECK,
-		outputFormat: 'php',
+		outputFormat: ASSET_CHECK ? 'json' : 'php',
 		requestToExternal,
 		requestToHandle,
 	} ),

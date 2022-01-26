@@ -1,0 +1,15 @@
+name: 'Compare Assets'
+description: 'Compares two assets files created by DependencyExtractionWebpackPlugin and reports the differences.'
+inputs:
+    repo-token:
+        description: 'GitHub token'
+        required: true
+    new-artifact-name:
+        description: 'The name of the uploaded artifact for the current branch'
+        required: true
+    old-artifact-name:
+        description: 'The name of the uploaded artifact for the old branch'
+        required: true
+runs:
+    using: 'node16'
+    main: 'index.js'

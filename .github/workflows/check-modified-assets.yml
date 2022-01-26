@@ -35,7 +35,7 @@ jobs:
               uses: actions/upload-artifact@v2
               with:
                   name: assets-list
-                  path: ./build/assets.php
+                  path: ./build/assets.json
 
     build-trunk:
         runs-on: ubuntu-latest
@@ -70,27 +70,15 @@ jobs:
               uses: actions/upload-artifact@v2
               with:
                   name: assets-list-trunk
-                  path: ./build/assets.php
+                  path: ./build/assets.json
 
     compare-assets:
         needs: [build-pr, build-trunk]
         runs-on: ubuntu-latest
         steps:
-            - name: Download assets
-              uses: actions/download-artifact@v2
+            - name: Compare Assets
+              uses: ./.github/compare-assets
               with:
-                  name: assets-list
-                  path: new-asset
-            - name: Download assets (trunk)
-              uses: actions/download-artifact@v2
-              with:
-                  name: assets-list-trunk
-                  path: old-asset
-            - uses: LouisBrunner/diff-action@v0.1.0
-              with:
-                  old: old-asset/assets.php
-                  new: new-asset/assets.php
-                  mode: deletion
-                  tolerance: mixed
-                  token: ${{ secrets.GITHUB_TOKEN }}
-                  notify_issue: true
+                  repo-token: '${{ secrets.GITHUB_TOKEN }}'
+                  old-artifact-name: assets-list-trunk
+                  new-artifact-name: assets-list
