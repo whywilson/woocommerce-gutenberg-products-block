@@ -38,7 +38,7 @@ const runner = async () => {
 						( dependency ) =>
 							! dependencies.includes( dependency )
 					);*/
-					const added = dependencies;
+					const added = Object.values( dependencies );
 					const removed = [];
 					return added.length || removed.length
 						? [
