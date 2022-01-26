@@ -1,15 +1,18 @@
 /**
  * External dependencies
  */
-const github = require( '@actions/github' );
-const core = require( '@actions/core' );
+const { getOctokit, context } = require( '@actions/github' );
+const { setFailed, getInput } = require( '@actions/core' );
 
 const runner = async () => {
 	try {
-		const token = core.getInput( 'repo-token', { required: true } );
-		const octokit = github.getOctokit( token );
+		const token = getInput( 'repo-token', { required: true } );
+		const octokit = getOctokit( token );
+		const payload = context.payload;
+		const repo = payload.repository.name;
+		const owner = payload.repository.owner.login;
 		const oldAssets = require( '../../' +
-			core.getInput( 'compare', {
+			getInput( 'compare', {
 				required: true,
 			} ) );
 
@@ -89,13 +92,14 @@ const runner = async () => {
 		__This comment was automatically added by the \`./github/compare-assets\` action.__
 		`;
 
-		await octokit.issues.createComment( {
-			...github.context.repo,
-			issue_number: github.context.payload.pull_request.number,
+		await octokit.rest.issues.createComment( {
+			owner,
+			repo,
+			issue_number: payload.pull_request.number,
 			body: message,
 		} );
 	} catch ( error ) {
-		core.setFailed( error.message );
+		setFailed( error.message );
 	}
 };
 
