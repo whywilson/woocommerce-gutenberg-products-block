@@ -40,22 +40,6 @@ describe( `${ block.name } Block (frontend)`, () => {
 		} );
 		await merchant.login();
 
-		// Enable BACS payment method
-		await merchant.openSettings( 'checkout', 'bacs' );
-		await setCheckbox( '#woocommerce_bacs_enabled' );
-		await settingsPageSaveChanges();
-
-		// Verify that settings have been saved
-		await verifyCheckboxIsSet( '#woocommerce_bacs_enabled' );
-
-		// Enable COD payment method
-		await merchant.openSettings( 'checkout', 'cod' );
-		await setCheckbox( '#woocommerce_cod_enabled' );
-		await settingsPageSaveChanges();
-
-		// Verify that settings have been saved
-		await verifyCheckboxIsSet( '#woocommerce_cod_enabled' );
-
 		// Get product page permalink.
 		await visitPostOfType( simpleProductName, 'product' );
 		productPermalink = await getNormalPagePermalink();
@@ -66,7 +50,7 @@ describe( `${ block.name } Block (frontend)`, () => {
 	afterAll( async () => {
 		// empty cart from shortcode page
 		await shopper.goToCart();
-		await shopper.removeFromCart( 'Woo Single #1' );
+		await shopper.removeFromCart( simpleProductName );
 		await page.evaluate( () => {
 			localStorage.removeItem(
 				'wc-blocks_dismissed_compatibility_notices'

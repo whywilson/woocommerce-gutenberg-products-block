@@ -220,6 +220,32 @@ const createReviews = ( id, fixture = fixtures.ReviewsInProduct( id ) ) =>
 	} );
 
 /**
+ * Enable Cash on delivery payments.
+ *
+ * This is not called directly but is called within enablePaymentGateways.
+ *
+ * @return {Promise} a promise that resolves to an server response data, or
+ * rejects if the request failed.
+ */
+const enableCashOnDelivery = () =>
+	WooCommerce.post( 'payment_gateways/cod', {
+		enabled: true,
+	} );
+
+/**
+ * Enable Direct bank transfer payments.
+ *
+ * This is not called directly but is called within enablePaymentGateways.
+ *
+ * @return {Promise} a promise that resolves to an server response data, or
+ * rejects if the request failed.
+ */
+const enableDirectBankTransfer = () =>
+	WooCommerce.post( 'payment_gateways/bacs', {
+		enabled: true,
+	} );
+
+/**
  * Enable Cheque payments.
  *
  * This is not called directly but is called within enablePaymentGateways.
@@ -240,7 +266,12 @@ const enableCheque = () =>
  * @return {Promise} a promise that resolves to an array of server response
  * data, or rejects if the request failed.
  */
-const enablePaymentGateways = () => Promise.all( [ enableCheque() ] );
+const enablePaymentGateways = () =>
+	Promise.all( [
+		enableCashOnDelivery(),
+		enableDirectBankTransfer(),
+		enableCheque(),
+	] );
 
 /**
  * Create shipping zones.
