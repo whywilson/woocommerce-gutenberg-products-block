@@ -54,7 +54,6 @@ describe( `${ block.name } Block (frontend)`, () => {
 	} );
 
 	it( 'allows customer to choose available payment methods', async () => {
-		await shopper.goToCheckoutBlock();
 		await page.goto( productPermalink );
 		await shopper.addToCart();
 		await shopper.goToCheckoutBlock();
@@ -65,17 +64,40 @@ describe( `${ block.name } Block (frontend)`, () => {
 				text: 'Direct bank transfer',
 			}
 		);
+		const bacs = await page.evaluate(
+			() =>
+				document.querySelector(
+					'#radio-control-wc-payment-method-options-bacs'
+				).checked
+		);
+		expect( bacs ).toBe( true );
+
 		await expect( page ).toClick(
 			'.wc-block-components-payment-method-label',
 			{
 				text: 'Cash on delivery',
 			}
 		);
+		const cod = await page.evaluate(
+			() =>
+				document.querySelector(
+					'#radio-control-wc-payment-method-options-cod'
+				).checked
+		);
+		expect( cod ).toBe( true );
+
 		await expect( page ).toClick(
 			'.wc-block-components-payment-method-label',
 			{
 				text: 'Check payments',
 			}
 		);
+		const cheque = await page.evaluate(
+			() =>
+				document.querySelector(
+					'#radio-control-wc-payment-method-options-cheque'
+				).checked
+		);
+		expect( cheque ).toBe( true );
 	} );
 } );
