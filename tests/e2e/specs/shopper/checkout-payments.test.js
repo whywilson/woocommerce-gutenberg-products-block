@@ -1,12 +1,7 @@
 /**
  * External dependencies
  */
-import {
-	merchant,
-	setCheckbox,
-	settingsPageSaveChanges,
-	verifyCheckboxIsSet,
-} from '@woocommerce/e2e-utils';
+import { merchant } from '@woocommerce/e2e-utils';
 
 /**
  * Internal dependencies
