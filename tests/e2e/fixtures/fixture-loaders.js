@@ -229,6 +229,7 @@ const createReviews = ( id, fixture = fixtures.ReviewsInProduct( id ) ) =>
  */
 const enableCashOnDelivery = () =>
 	WooCommerce.post( 'payment_gateways/cod', {
+		description: 'Cash on delivery',
 		enabled: true,
 	} );
 
@@ -242,6 +243,7 @@ const enableCashOnDelivery = () =>
  */
 const enableDirectBankTransfer = () =>
 	WooCommerce.post( 'payment_gateways/bacs', {
+		description: 'Direct bank transfer',
 		enabled: true,
 	} );
 
@@ -255,6 +257,7 @@ const enableDirectBankTransfer = () =>
  */
 const enableCheque = () =>
 	WooCommerce.post( 'payment_gateways/cheque', {
+		description: 'Check payments',
 		enabled: true,
 	} );
 

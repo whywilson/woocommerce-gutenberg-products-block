@@ -46,4 +46,22 @@ export const shopper = {
 			}
 		);
 	},
+
+	selectPayment: async ( payment ) => {
+		await expect( page ).toClick(
+			'.wc-block-components-payment-method-label',
+			{
+				text: payment,
+			}
+		);
+	},
+
+	placeOrder: async () => {
+		await expect( page ).toClick( '.wc-block-components-button__text', {
+			text: 'Place Order',
+		} );
+		page.waitForNavigation( {
+			waitUntil: 'networkidle0',
+		} );
+	},
 };

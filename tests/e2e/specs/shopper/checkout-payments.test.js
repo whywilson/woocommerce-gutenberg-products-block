@@ -1,13 +1,9 @@
 /**
- * External dependencies
- */
-import { merchant } from '@woocommerce/e2e-utils';
-
-/**
  * Internal dependencies
  */
 import {
 	getNormalPagePermalink,
+	merchant,
 	shopper,
 	visitPostOfType,
 } from '../../../utils';
@@ -17,22 +13,20 @@ const block = {
 };
 
 const simpleProductName = 'Woo Single #1';
+const cod = 'Cash on delivery';
+const bacs = 'Direct bank transfer';
+const cheque = 'Check payments';
 
 if ( process.env.WOOCOMMERCE_BLOCKS_PHASE < 2 )
 	// eslint-disable-next-line jest/no-focused-tests
 	test.only( `skipping ${ block.name } tests`, () => {} );
 
-describe( `${ block.name } Block (frontend)`, () => {
+describe( 'Shopper → Checkout → Can choose payment option', () => {
 	let productPermalink;
 
 	beforeAll( async () => {
 		// prevent CartCheckoutCompatibilityNotice from appearing
-		await page.evaluate( () => {
-			localStorage.setItem(
-				'wc-blocks_dismissed_compatibility_notices',
-				'["checkout"]'
-			);
-		} );
+		await merchant.preventCompatibilityNotice();
 		await merchant.login();
 
 		// Get product page permalink.
@@ -46,58 +40,36 @@ describe( `${ block.name } Block (frontend)`, () => {
 		// empty cart from shortcode page
 		await shopper.goToCart();
 		await shopper.removeFromCart( simpleProductName );
-		await page.evaluate( () => {
-			localStorage.removeItem(
-				'wc-blocks_dismissed_compatibility_notices'
-			);
-		} );
+		await merchant.reactivateCompatibilityNotice();
 	} );
 
-	it( 'allows customer to choose available payment methods', async () => {
+	it( 'allows customer to pay using Direct bank transfer', async () => {
 		await page.goto( productPermalink );
 		await shopper.addToCart();
 		await shopper.goToCheckoutBlock();
 
-		await expect( page ).toClick(
-			'.wc-block-components-payment-method-label',
-			{
-				text: 'Direct bank transfer',
-			}
-		);
-		const bacs = await page.evaluate(
-			() =>
-				document.querySelector(
-					'#radio-control-wc-payment-method-options-bacs'
-				).checked
-		);
-		expect( bacs ).toBe( true );
+		await shopper.selectPayment( bacs );
+		await shopper.placeOrder();
+		await expect( page ).toMatch( bacs );
+	} );
 
-		await expect( page ).toClick(
-			'.wc-block-components-payment-method-label',
-			{
-				text: 'Cash on delivery',
-			}
-		);
-		const cod = await page.evaluate(
-			() =>
-				document.querySelector(
-					'#radio-control-wc-payment-method-options-cod'
-				).checked
-		);
-		expect( cod ).toBe( true );
+	it( 'allows customer to pay using Cash on delivery', async () => {
+		await page.goto( productPermalink );
+		await shopper.addToCart();
+		await shopper.goToCheckoutBlock();
 
-		await expect( page ).toClick(
-			'.wc-block-components-payment-method-label',
-			{
-				text: 'Check payments',
-			}
-		);
-		const cheque = await page.evaluate(
-			() =>
-				document.querySelector(
-					'#radio-control-wc-payment-method-options-cheque'
-				).checked
-		);
-		expect( cheque ).toBe( true );
+		await shopper.selectPayment( cod );
+		await shopper.placeOrder();
+		await expect( page ).toMatch( cod );
+	} );
+
+	it( 'allows customer to pay using Check payments', async () => {
+		await page.goto( productPermalink );
+		await shopper.addToCart();
+		await shopper.goToCheckoutBlock();
+
+		await shopper.selectPayment( cheque );
+		await shopper.placeOrder();
+		await expect( page ).toMatch( cheque );
 	} );
 } );
