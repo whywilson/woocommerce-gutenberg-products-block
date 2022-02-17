@@ -46,4 +46,29 @@ export const shopper = {
 			}
 		);
 	},
+
+	selectAndVerifyShippingOption: async ( shippingName, shippingPrice ) => {
+		await expect( page ).toClick(
+			'.wc-block-components-radio-control__label',
+			{
+				text: shippingName,
+			}
+		);
+		await page.waitForTimeout( 500 );
+		await expect( page ).toMatchElement(
+			'.wc-block-components-totals-shipping .wc-block-formatted-money-amount',
+			{
+				text: shippingPrice,
+			}
+		);
+	},
+
+	placeOrder: async () => {
+		await expect( page ).toClick( '.wc-block-components-button__text', {
+			text: 'Place Order',
+		} );
+		page.waitForNavigation( {
+			waitUntil: 'networkidle0',
+		} );
+	},
 };

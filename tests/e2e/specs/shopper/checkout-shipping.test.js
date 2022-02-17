@@ -1,14 +1,10 @@
 /**
- * External dependencies
- */
-import { merchant } from '@woocommerce/e2e-utils';
-
-/**
  * Internal dependencies
  */
 import {
 	getNormalPagePermalink,
 	shopper,
+	merchant,
 	visitPostOfType,
 } from '../../../utils';
 
@@ -18,7 +14,7 @@ const block = {
 
 const simpleProductName = '128GB USB Stick';
 const freeShippingName = 'Free Shipping';
-const freeShippingPrise = '$0.00';
+const freeShippingPrice = '$0.00';
 const normalShippingName = 'Normal Shipping';
 const normalShippingPrice = '$20.00';
 
@@ -26,17 +22,12 @@ if ( process.env.WOOCOMMERCE_BLOCKS_PHASE < 2 )
 	// eslint-disable-next-line jest/no-focused-tests
 	test.only( `skipping ${ block.name } tests`, () => {} );
 
-describe( `${ block.name } Block (frontend)`, () => {
+describe( `Shopper → Checkout → Can choose shipping option`, () => {
 	let productPermalink;
 
 	beforeAll( async () => {
 		// prevent CartCheckoutCompatibilityNotice from appearing
-		await page.evaluate( () => {
-			localStorage.setItem(
-				'wc-blocks_dismissed_compatibility_notices',
-				'["checkout"]'
-			);
-		} );
+		await merchant.preventCompatibilityNotice();
 		await merchant.login();
 
 		// Get product page permalink.
@@ -50,43 +41,32 @@ describe( `${ block.name } Block (frontend)`, () => {
 		// empty cart from shortcode page
 		await shopper.goToCart();
 		await shopper.removeFromCart( simpleProductName );
-		await page.evaluate( () => {
-			localStorage.removeItem(
-				'wc-blocks_dismissed_compatibility_notices'
-			);
-		} );
+		await merchant.reactivateCompatibilityNotice();
 	} );
 
-	it( 'allows customer to choose available shipping methods', async () => {
+	it( 'allows customer to choose free shipping', async () => {
 		await page.goto( productPermalink );
 		await shopper.addToCart();
 		await shopper.goToCheckoutBlock();
 
-		await expect( page ).toClick(
-			'.wc-block-components-radio-control__label',
-			{
-				text: freeShippingName,
-			}
+		await shopper.selectAndVerifyShippingOption(
+			freeShippingName,
+			freeShippingPrice
 		);
-		await expect( page ).toMatchElement(
-			'.wc-block-components-totals-shipping .wc-block-formatted-money-amount',
-			{
-				text: freeShippingPrise,
-			}
-		);
+		await shopper.placeOrder();
+		await expect( page ).toMatch( freeShippingName );
+	} );
 
-		await expect( page ).toClick(
-			'.wc-block-components-radio-control__label',
-			{
-				text: normalShippingName,
-			}
+	it( 'allows customer to choose flat rate shipping', async () => {
+		await page.goto( productPermalink );
+		await shopper.addToCart();
+		await shopper.goToCheckoutBlock();
+
+		await shopper.selectAndVerifyShippingOption(
+			normalShippingName,
+			normalShippingPrice
 		);
-		await page.waitForTimeout( 1000 );
-		await expect( page ).toMatchElement(
-			'.wc-block-components-totals-shipping .wc-block-formatted-money-amount',
-			{
-				text: normalShippingPrice,
-			}
-		);
+		await shopper.placeOrder();
+		await expect( page ).toMatch( normalShippingName );
 	} );
 } );
